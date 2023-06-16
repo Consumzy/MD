@@ -6,24 +6,18 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 
 @Dao
 interface FoodDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertFood(food: List<Food>)
+    suspend fun insertInitialCategory(categories: List<Category>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertUnit(unit: List<Unit>)
+    suspend fun insertFood(food: Food)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertCategory(category: List<Category>)
-
-    @Query("SELECT * from food")
-    fun getAllFood(): LiveData<List<Food>>
-
-    @Transaction
-    @Query("SELECT * from unit")
-    fun getAllUnit(): LiveData<List<Unit>>
+    @Update(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun updateFood(food: Food)
 
     @Transaction
     @Query("SELECT * from category")
@@ -32,4 +26,12 @@ interface FoodDao {
     @Transaction
     @Query("SELECT * from food")
     fun getAllFoodProfile(): LiveData<List<FoodProfile>>
+
+    @Transaction
+    @Query("SELECT * from food where foodId = :foodId")
+    fun getFoodProfile(foodId: Int): LiveData<FoodProfile>
+
+    @Transaction
+    @Query("DELETE FROM food WHERE foodId = :foodId")
+    suspend fun deleteFoodById(foodId: Int)
 }

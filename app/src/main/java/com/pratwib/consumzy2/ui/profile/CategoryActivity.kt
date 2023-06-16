@@ -17,7 +17,7 @@ class CategoryActivity : AppCompatActivity() {
     private var list = mutableListOf<Category>()
 
     private val categoryViewModel: CategoryViewModel by viewModels {
-        ViewModelFactory((application as MyApplication).repository)
+        CategoryViewModelFactory((application as MyApplication).repository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,23 +25,22 @@ class CategoryActivity : AppCompatActivity() {
         binding = ActivityCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupToolbar()
     }
 
     override fun onResume() {
         super.onResume()
 
-        setupView()
+        getListCategory()
     }
 
-    private fun setupView() {
+    private fun setupToolbar() {
         setSupportActionBar(binding.tbCategory)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-        getCategory()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun getCategory() {
+    private fun getListCategory() {
         val adapter = CategoryAdapter(list)
         binding.rvCategory.adapter = adapter
         binding.rvCategory.layoutManager = LinearLayoutManager(this)
@@ -51,6 +50,4 @@ class CategoryActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
     }
-
-
 }

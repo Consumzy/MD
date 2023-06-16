@@ -1,11 +1,17 @@
 package com.pratwib.consumzy2.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.pratwib.consumzy2.MyApplication
 import com.pratwib.consumzy2.R
+import com.pratwib.consumzy2.adapter.FoodProfileAdapter
+import com.pratwib.consumzy2.database.FoodProfile
 import com.pratwib.consumzy2.databinding.ActivityHomeBinding
 import com.pratwib.consumzy2.ui.profile.ProfileActivity
 import com.pratwib.consumzy2.ui.scan.ScanActivity
@@ -16,24 +22,51 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
 
+    private var list = mutableListOf<FoodProfile>()
+
+    private val homeViewModel: HomeViewModel by viewModels {
+        HomeViewModelFactory((application as MyApplication).repository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupView()
+        setupToolbar()
         bottomNavigation()
+        fabAddList()
     }
 
-    private fun setupView() {
-        setSupportActionBar(binding.tbHome)
-        supportActionBar!!.setDisplayShowTitleEnabled(false)
+    override fun onResume() {
+        super.onResume()
 
-        val fabAddFood = binding.fabAddFood
-        fabAddFood.setOnClickListener {
+        getListFoodProfile()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun getListFoodProfile() {
+        val adapter = FoodProfileAdapter(this, list)
+        binding.rvFoodProfile.adapter = adapter
+        binding.rvFoodProfile.layoutManager = LinearLayoutManager(this)
+        homeViewModel.getAllFoodProfile().observe(this) {
+            list.clear()
+            list.addAll(it)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun fabAddList() {
+        binding.fabAddFood.setOnClickListener {
             val addFoodIntent = Intent(this, AddFoodActivity::class.java)
             startActivity(addFoodIntent)
         }
+    }
+
+
+    private fun setupToolbar() {
+        setSupportActionBar(binding.tbHome)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

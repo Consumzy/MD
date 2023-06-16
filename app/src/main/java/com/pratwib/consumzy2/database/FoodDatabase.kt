@@ -10,9 +10,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(
-    entities = [Food::class, Unit::class, Category::class],
+    entities = [Food::class, Category::class],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 abstract class FoodDatabase : RoomDatabase() {
 
@@ -37,8 +37,7 @@ abstract class FoodDatabase : RoomDatabase() {
                                 INSTANCE?.let { database ->
                                     applicationScope.launch {
                                         val foodDao = database.foodDao()
-                                        foodDao.insertCategory(InitialDataSource.getCategories())
-                                        foodDao.insertUnit(InitialDataSource.getUnits())
+                                        foodDao.insertInitialCategory(InitialDataSource.getCategories())
                                     }
                                 }
                             }

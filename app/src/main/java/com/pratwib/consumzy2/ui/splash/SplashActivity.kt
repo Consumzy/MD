@@ -14,7 +14,6 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val splashTime: Long = 3000
-
         Handler().postDelayed({
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)

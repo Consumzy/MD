@@ -1,5 +1,6 @@
 package com.pratwib.consumzy2.ui.profile
 
+import android.accounts.Account
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,22 +20,25 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupView()
+        cardSelection()
         bottomNavigation()
     }
 
-    private fun setupView() {
-
+    private fun cardSelection() {
+        val cardMyAccount = binding.cvProfileAccount
+        cardMyAccount.setOnClickListener {
+            val intent = Intent(this, AccountActivity::class.java)
+            startActivity(intent)
+        }
         val cardMySummary = binding.cvProfileSummary
         cardMySummary.setOnClickListener {
-            val mySummaryIntent = Intent(this, SummaryActivity::class.java)
-            startActivity(mySummaryIntent)
+            val intent = Intent(this, SummaryActivity::class.java)
+            startActivity(intent)
         }
-
         val cardMyCategory = binding.cvProfileCategory
         cardMyCategory.setOnClickListener {
-            val myCategoryIntent = Intent(this, CategoryActivity::class.java)
-            startActivity(myCategoryIntent)
+            val intent = Intent(this, CategoryActivity::class.java)
+            startActivity(intent)
         }
     }
 

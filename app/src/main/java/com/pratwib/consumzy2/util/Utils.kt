@@ -26,6 +26,42 @@ val timeStamp: String = SimpleDateFormat(
     Locale.US
 ).format(System.currentTimeMillis())
 
+fun convertLongToDate(timestamp: Long): String {
+    val date = Date(timestamp)
+    val dateFormat = SimpleDateFormat("MMMM dd", Locale.getDefault())
+    return dateFormat.format(date)
+}
+
+fun getDayDifference(timestamp1: Long, timestamp2: Long): Long {
+    val calendar1 = Calendar.getInstance()
+    calendar1.timeInMillis = timestamp1
+
+    val calendar2 = Calendar.getInstance()
+    calendar2.timeInMillis = timestamp2
+
+    // Hapus informasi jam, menit, detik, dan milidetik
+    calendar1.set(Calendar.HOUR_OF_DAY, 0)
+    calendar1.set(Calendar.MINUTE, 0)
+    calendar1.set(Calendar.SECOND, 0)
+    calendar1.set(Calendar.MILLISECOND, 0)
+
+    calendar2.set(Calendar.HOUR_OF_DAY, 0)
+    calendar2.set(Calendar.MINUTE, 0)
+    calendar2.set(Calendar.SECOND, 0)
+    calendar2.set(Calendar.MILLISECOND, 0)
+
+    val differenceInMillis = calendar2.timeInMillis - calendar1.timeInMillis
+
+    return differenceInMillis / (24 * 60 * 60 * 1000)
+}
+
+fun progressBarHorizontal(past: Long, now: Long, later: Long): Int {
+    val totalDuration = later - past
+    val currentDuration = now - past
+
+    return ((currentDuration.toFloat() / totalDuration) * 100).toInt()
+}
+
 fun createTempFile(context: Context): File {
     val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
     return File.createTempFile(timeStamp, ".jpg", storageDir)
@@ -35,17 +71,17 @@ fun createFile(application: Application): File {
     val mediaDir = application.externalMediaDirs.firstOrNull()?.let {
         File(it, application.resources.getString(R.string.app_name)).apply { mkdirs() }
     }
-
     val outputDirectory = if (
         mediaDir != null && mediaDir.exists()
     ) mediaDir else application.filesDir
-
     return File(outputDirectory, "$timeStamp.jpg")
 }
 
 fun rotateFile(file: File, isBackCamera: Boolean = false) {
     val matrix = Matrix()
+
     val bitmap = BitmapFactory.decodeFile(file.path)
+
     val rotation = if (isBackCamera) 0f else 0f
     matrix.postRotate(rotation)
     if (!isBackCamera) {
@@ -57,11 +93,15 @@ fun rotateFile(file: File, isBackCamera: Boolean = false) {
 
 fun uriToFile(selectedImg: Uri, context: Context): File {
     val contentResolver: ContentResolver = context.contentResolver
+
     val myFile = createTempFile(context)
 
     val inputStream = contentResolver.openInputStream(selectedImg) as InputStream
+
     val outputStream: OutputStream = FileOutputStream(myFile)
+
     val buf = ByteArray(1024)
+
     var len: Int
     while (inputStream.read(buf).also { len = it } > 0) outputStream.write(buf, 0, len)
     outputStream.close()
@@ -72,7 +112,9 @@ fun uriToFile(selectedImg: Uri, context: Context): File {
 
 fun reduceFileImage(file: File): File {
     val bitmap = BitmapFactory.decodeFile(file.path)
+
     var compressQuality = 100
+
     var streamLength: Int
     do {
         val bmpStream = ByteArrayOutputStream()

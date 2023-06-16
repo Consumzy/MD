@@ -20,7 +20,7 @@
             android:id="@+id/iv_category_color"
             android:layout_width="16dp"
             android:layout_height="64dp"
-            android:background="@color/white"
+            android:background="@color/dark_gray"
             android:contentDescription="@string/category_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

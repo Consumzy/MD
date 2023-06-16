@@ -35,11 +35,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_app_name"
-        app:menu="@menu/home_menu" />
+        app:menu="@menu/home_menu"
+        tools:ignore="RtlSymmetry" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_food_profile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintTop_toBottomOf="@id/tb_home"
         tools:listitem="@layout/item_food" />
 

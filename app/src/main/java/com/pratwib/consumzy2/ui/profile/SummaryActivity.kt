@@ -13,10 +13,10 @@ class SummaryActivity : AppCompatActivity() {
         binding = ActivitySummaryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupView()
+        setupToolbar()
     }
 
-    private fun setupView() {
+    private fun setupToolbar() {
         setSupportActionBar(binding.tbSummary)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }

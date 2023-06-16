@@ -23,7 +23,7 @@ class CategoryAdapter(private val list: List<Category>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val category = list[position]
 
-        holder.binding.tvCategoryName.text = category.category
+        holder.binding.tvCategoryName.text = category.name
         holder.binding.ivCategoryColor.setBackgroundColor(category.color)
     }
 }

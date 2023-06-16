@@ -57,33 +57,48 @@ class ScanActivity : AppCompatActivity() {
         binding = ActivityScanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupView()
-        bottomNavigation()
-    }
-
-    private fun setupView() {
         if (!allPermissionGranted()) {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
             )
         }
 
-        binding.btnPhoto.setOnClickListener { startCameraX() }
-        binding.btnGallery.setOnClickListener { startGallery() }
+        bottomNavigation()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startCameraX()
+        startGallery()
+        scanFood()
+    }
+
+    private fun scanFood() {
+        binding.btnScan.setOnClickListener {
+            val intent = Intent(this, ResultActivity::class.java)
+            getFile?.let { file ->
+                intent.putExtra("imagePath", file.path)
+            }
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun startGallery() {
-        val intent = Intent()
-        intent.action = Intent.ACTION_GET_CONTENT
-        intent.type = "image/*"
-        val chooser = Intent.createChooser(intent, "Choose an Image")
-        launcherIntentGallery.launch(chooser)
-
+        binding.btnGallery.setOnClickListener {
+            val intent = Intent()
+            intent.action = Intent.ACTION_GET_CONTENT
+            intent.type = "image/*"
+            val chooser = Intent.createChooser(intent, "Choose an Image")
+            launcherIntentGallery.launch(chooser)
+        }
     }
 
     private fun startCameraX() {
-        val intent = Intent(this, CameraActivity::class.java)
-        launcherIntentCameraX.launch(intent)
+        binding.btnPhoto.setOnClickListener {
+            val intent = Intent(this, CameraActivity::class.java)
+            launcherIntentCameraX.launch(intent)
+        }
     }
 
     private val launcherIntentCameraX = registerForActivityResult(
@@ -96,7 +111,6 @@ class ScanActivity : AppCompatActivity() {
                 it.data?.getSerializableExtra("picture")
             } as? File
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
-
             myFile?.let { file ->
                 rotateFile(file, isBackCamera)
                 getFile = file
@@ -131,7 +145,6 @@ class ScanActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_scan -> true
-
                 R.id.nav_profile -> {
                     startActivity(Intent(this, ProfileActivity::class.java))
                     overridePendingTransition(0, 0)

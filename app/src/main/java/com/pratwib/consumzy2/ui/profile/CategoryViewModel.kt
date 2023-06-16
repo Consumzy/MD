@@ -8,10 +8,9 @@ import com.pratwib.consumzy2.database.Category
 
 class CategoryViewModel(private val foodRepository: FoodRepository) : ViewModel() {
     fun getAllCategory(): LiveData<List<Category>> = foodRepository.getAllCategory()
-
 }
 
-class ViewModelFactory(private val repository: FoodRepository) : ViewModelProvider.Factory {
+class CategoryViewModelFactory(private val repository: FoodRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CategoryViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
